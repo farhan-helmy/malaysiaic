@@ -1,117 +1,212 @@
-# typescript-npm-package-template
+# MalaysiaIC
 
-> Template to kickstart creating a Node.js module using TypeScript and VSCode
+The MyKad library provides tools to validate, parse, generate, and format Malaysian Identity Card (MyKad) numbers.
 
-Inspired by [node-module-boilerplate](https://github.com/sindresorhus/node-module-boilerplate)
+## Installation
+
+Using npm:
+
+```bash
+npm install mykad
+```
+
+Using yarn:
+
+```bash
+yarn install mykad
+```
+
+Using pnpm:
+
+```bash
+pnpm install mykad
+```
+
+Using bun:
+
+```bash
+bun install mykad
+```
+
+## Importing
+
+```javascript
+import malaysiaic from 'malaysiaic';
+```
+
+## Browser
+
+```html
+<script src="browser/mykad.min.js"></script>
+```
 
 ## Features
 
-- [Semantic Release](https://github.com/semantic-release/semantic-release)
-- [Issue Templates](https://github.com/ryansonshine/typescript-npm-package-template/tree/main/.github/ISSUE_TEMPLATE)
-- [GitHub Actions](https://github.com/ryansonshine/typescript-npm-package-template/tree/main/.github/workflows)
-- [Codecov](https://about.codecov.io/)
-- [VSCode Launch Configurations](https://github.com/ryansonshine/typescript-npm-package-template/blob/main/.vscode/launch.json)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Husky](https://github.com/typicode/husky)
-- [Lint Staged](https://github.com/okonet/lint-staged)
-- [Commitizen](https://github.com/search?q=commitizen)
-- [Jest](https://jestjs.io/)
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
+### Validation
 
-## Getting started
+MyKad numbers can be checked for validity. It ensures correct 12-digits, valid date of birth, and place of birth code.
 
-### Set up your repository
+```javascript
+if (mykad.isValid('560224108354')) {
+  console.log('Valid MyKad number');
+}
 
-**Click the "Use this template" button.**
+if (mykad.isValid('560224-10-8354')) {
+  console.log('Also valid...');
+}
 
-Alternatively, create a new directory and then run:
-
-```bash
-curl -fsSL https://github.com/ryansonshine/typescript-npm-package-template/archive/main.tar.gz | tar -xz --strip-components=1
+// Not valid. Invalid date of birth and place of birth code.
+mykad.isValid('561372-70-7953');
 ```
 
-Replace `FULL_NAME`, `GITHUB_USER`, and `REPO_NAME` in the script below with your own details to personalize your new package:
+### Formatting
 
-```bash
-FULL_NAME="John Smith"
-GITHUB_USER="johnsmith"
-REPO_NAME="my-cool-package"
-sed -i.mybak "s/\([\/\"]\)(ryansonshine)/$GITHUB_USER/g; s/typescript-npm-package-template\|my-package-name/$REPO_NAME/g; s/Ryan Sonshine/$FULL_NAME/g" package.json package-lock.json README.md
-rm *.mybak
+MyKad numbers can be formatted to either have dash or without. Note that this simply formats without validation (date/place of birth code). You can use isValid() if you need to check for validity.
+
+#### Format
+
+```javascript
+try {
+  const formatted = mykad.format('111013018934');
+  console.log(formatted); // 111013-01-8934
+} catch (error) {
+  throw error; // Input error
+}
 ```
 
-### Add NPM Token
+#### Unformat
 
-Add your npm token to your GitHub repository secrets as `NPM_TOKEN`.
-
-### Add Codecov integration
-
-Enable the Codecov GitHub App [here](https://github.com/apps/codecov).
-
-**Remove everything from here and above**
-
----
-
-# my-package-name
-
-[![npm package][npm-img]][npm-url]
-[![Build Status][build-img]][build-url]
-[![Downloads][downloads-img]][downloads-url]
-[![Issues][issues-img]][issues-url]
-[![Code Coverage][codecov-img]][codecov-url]
-[![Commitizen Friendly][commitizen-img]][commitizen-url]
-[![Semantic Release][semantic-release-img]][semantic-release-url]
-
-> My awesome module
-
-## Install
-
-```bash
-npm install my-package-name
+```javascript
+try {
+  const unformatted = mykad.unformat('111013-01-8934');
+  console.log(unformatted); // 111013018934
+} catch (error) {
+  throw error; // Input error
+}
 ```
 
-## Usage
+### Generate
 
-```ts
-import { myPackage } from 'my-package-name';
+You can generate random MyKad numbers. All generate numbers are valid MyKad numbers.
 
-myPackage('hello');
-//=> 'hello from my package'
+```javascript
+const randomIcNum = mykad.generateRandom();
+console.log(randomIcNum);
 ```
 
-## API
+## Parsing
 
-### myPackage(input, options?)
+MyKad numbers contain information about the holder's date of birth, place of birth, and gender. Date of birth assumes the age is under 100 years old. For example, the birth year '12' is 2012 instead of 1912.
 
-#### input
+```javascript
+try {
+  const data = mykad.parse('890724-01-2498');
+  console.log(data);
+} catch (error) {
+  throw error;
+}
+```
 
-Type: `string`
+Parsed data is as the following:
 
-Lorem ipsum.
+```javascript
+{
+    birthDate: new Date(1989, 6, 24),
+    birthPlace: { region: 'SOUTHEAST_ASIA', country: 'MY', state: 'JHR' },
+    gender: 'female'
+}
+```
 
-#### options
+### Birthplace
 
-Type: `object`
+State information is available for those born in Malaysia. For others, it either contains the specific country information or only an approximation of the region. However, some countries are uncategorized.
 
-##### postfix
+#### States
 
-Type: `string`
-Default: `rainbows`
+```javascript
+[
+  'JHR',
+  'KDH',
+  'KTN',
+  'MLK',
+  'NSN',
+  'PHG',
+  'PNG',
+  'PRK',
+  'PLS',
+  'SBH',
+  'SWK',
+  'SGR',
+  'TRG',
+  'KUL',
+  'LBN',
+  'PJY',
+  'UNKNOWN_STATE',
+];
+```
 
-Lorem ipsum.
+#### Countries
 
-[build-img]:https://github.com/ryansonshine/typescript-npm-package-template/actions/workflows/release.yml/badge.svg
-[build-url]:https://github.com/ryansonshine/typescript-npm-package-template/actions/workflows/release.yml
-[downloads-img]:https://img.shields.io/npm/dt/typescript-npm-package-template
-[downloads-url]:https://www.npmtrends.com/typescript-npm-package-template
-[npm-img]:https://img.shields.io/npm/v/typescript-npm-package-template
-[npm-url]:https://www.npmjs.com/package/typescript-npm-package-template
-[issues-img]:https://img.shields.io/github/issues/ryansonshine/typescript-npm-package-template
-[issues-url]:https://github.com/ryansonshine/typescript-npm-package-template/issues
-[codecov-img]:https://codecov.io/gh/ryansonshine/typescript-npm-package-template/branch/main/graph/badge.svg
-[codecov-url]:https://codecov.io/gh/ryansonshine/typescript-npm-package-template
-[semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-release-url]:https://github.com/semantic-release/semantic-release
-[commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
-[commitizen-url]:http://commitizen.github.io/cz-cli/
+Refer to [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) for country codes. Country codes can also contain these following status.
+
+```javascript
+['FOREIGN_UNKNOWN', 'STATELESS', 'UNSPECIFIED'];
+```
+
+#### Region
+
+Some codes for place of birth only contain information of the approximate region or some only an approximate country. The list of regions are the following:
+
+```javascript
+[
+  'SOUTHEAST_ASIA',
+  'BRITISH_ISLES',
+  'SOVIET_REPUBLIC',
+  'EAST_ASIA',
+  'SOUTH_ASIA',
+  'AFRICA',
+  'SOUTH_AMERICA',
+  'CENTRAL_AMERICA',
+  'OCEANIA',
+  'MIDDLE_EAST',
+  'EUROPE',
+  'MIDDLE_AMERICA',
+  'MISCELLANEOUS',
+];
+```
+
+Known regions data contains the list of the countries as documented in the official registry. For example:
+
+```javascript
+{
+    region: 'NORTH_AMERICA',
+    country: 'CA|GL|AN|PM|US',
+    state: null
+}
+```
+
+### Gender
+
+Gender information is provided in the form of the following values:
+
+```javascript
+['male', 'female'];
+```
+
+## Error handling
+
+You can omit try/catch error handling when the inputted IC numbers are certain to be valid, such as after calling `mykad.isValid(icNum)` to verify the input.
+
+```javascript
+if (mykad.isValid(icNum)) {
+  mykad.format(icNum);
+  mykad.unformat(icNum);
+  mykad.parse(icNum);
+}
+```
+
+## Issues
+
+For any issues or suggestions for the library, you can make them on the GitHub repository.
+
+More info: [twm](https://twm.me)

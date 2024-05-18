@@ -1,7 +1,7 @@
 {
-  "name": "typescript-npm-package-template",
+  "name": "malaysiaic",
   "version": "0.0.0-development",
-  "description": "A template for creating npm packages using TypeScript and VSCode",
+  "description": "Malaysia IC Number Validator",
   "main": "./lib/index.js",
   "files": [
     "lib/**/*"
@@ -19,16 +19,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryansonshine/typescript-npm-package-template.git"
+    "url": "git+https://github.com/farhan-helmy/malaysiaic.git"
   },
   "license": "MIT",
   "author": {
-    "name": "Ryan Sonshine",
-    "email": "ryansonshine@users.noreply.github.com",
-    "url": "https://github.com/ryansonshine"
+    "name": "Farhan Helmy",
+    "email": "farhan-helmy@users.noreply.github.com",
+    "url": "https://github.com/farhan-helmy"
   },
   "engines": {
-    "node": ">=12.0"
+    "node": ">=20.0"
   },
   "keywords": [
     "boilerplate",
@@ -42,13 +42,13 @@
     "codecov"
   ],
   "bugs": {
-    "url": "https://github.com/ryansonshine/typescript-npm-package-template/issues"
+    "url": "https://github.com/farhan-helmy/malaysiaic/issues"
   },
-  "homepage": "https://github.com/ryansonshine/typescript-npm-package-template#readme",
+  "homepage": "https://github.com/farhan-helmy/malaysiaic#readme",
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
-    "@types/jest": "^27.5.2",
+    "@types/jest": "^29.5.12",
     "@types/node": "^12.20.11",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
