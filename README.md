@@ -1,6 +1,6 @@
 # MalaysiaIC
 
-The MyKad library provides tools to validate, parse, generate, and format Malaysian Identity Card (MyKad) numbers.
+The Malaysia IC library provides tools to validate, parse, generate, and format Malaysian Identity Card (MyKad) numbers.
 
 ## Installation
 
@@ -31,13 +31,13 @@ bun install mykad
 ## Importing
 
 ```javascript
-import { isValid, parse, format, unformat, generateRandom } from 'malaysiaic';
-```
-
-## Browser
-
-```html
-<script src="browser/mykad.min.js"></script>
+import {
+  isValidIc,
+  parseIc,
+  formatIc,
+  unformatIc,
+  generateRandomIc,
+} from 'malaysiaic';
 ```
 
 ## Features
@@ -47,27 +47,27 @@ import { isValid, parse, format, unformat, generateRandom } from 'malaysiaic';
 MyKad numbers can be checked for validity. It ensures correct 12-digits, valid date of birth, and place of birth code.
 
 ```javascript
-if (isValid('560224108354')) {
+if (isValidIc('560224108354')) {
   console.log('Valid MyKad number');
 }
 
-if (isValid('560224-10-8354')) {
+if (isValidIc('560224-10-8354')) {
   console.log('Also valid...');
 }
 
 // Not valid. Invalid date of birth and place of birth code.
-isValid('561372-70-7953');
+isValidIc('561372-70-7953');
 ```
 
 ### Formatting
 
-MyKad numbers can be formatted to either have dash or without. Note that this simply formats without validation (date/place of birth code). You can use isValid() if you need to check for validity.
+MyKad numbers can be formatted to either have dash or without. Note that this simply formats without validation (date/place of birth code). You can use isValidIc() if you need to check for validity.
 
 #### Format
 
 ```javascript
 try {
-  const formatted = format('111013018934');
+  const formatted = formatIc('111013018934');
   console.log(formatted); // 111013-01-8934
 } catch (error) {
   throw error; // Input error
@@ -78,7 +78,7 @@ try {
 
 ```javascript
 try {
-  const unformatted = unformat('111013-01-8934');
+  const unformatted = unformatIc('111013-01-8934');
   console.log(unformatted); // 111013018934
 } catch (error) {
   throw error; // Input error
@@ -90,7 +90,7 @@ try {
 You can generate random MyKad numbers. All generate numbers are valid MyKad numbers.
 
 ```javascript
-const randomIcNum = generateRandom();
+const randomIcNum = generateRandomIc();
 console.log(randomIcNum);
 ```
 
@@ -100,7 +100,7 @@ MyKad numbers contain information about the holder's date of birth, place of bir
 
 ```javascript
 try {
-  const data = parse('890724-01-2498');
+  const data = parseIc('890724-01-2498');
   console.log(data);
 } catch (error) {
   throw error;
@@ -195,12 +195,12 @@ Gender information is provided in the form of the following values:
 
 ## Error handling
 
-You can omit try/catch error handling when the inputted IC numbers are certain to be valid, such as after calling `isValid(icNum)` to verify the input.
+You can omit try/catch error handling when the inputted IC numbers are certain to be valid, such as after calling `isValidIc(icNum)` to verify the input.
 
 ```javascript
-if (isValid(icNum)) {
-  format(icNum);
-  unformat(icNum);
-  parse(icNum);
+if (isValidIc(icNum)) {
+  formatIc(icNum);
+  unformatIc(icNum);
+  parseIc(icNum);
 }
 ```
