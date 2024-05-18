@@ -1,4 +1,10 @@
-import { isValid, parse, format, unformat, generateRandom } from '../src';
+import {
+  isValidIc,
+  parseIc,
+  formatIc,
+  unformatIc,
+  generateRandomIc,
+} from '../src';
 
 interface BirthPlace {
   region: string | null;
@@ -83,42 +89,42 @@ const numDataPairs: { [key: string]: DataPair } = {
 };
 
 describe('MalaysiaIC', () => {
-  describe('#isValid()', () => {
-    it('should return true for valid unformatted MyKad number', () => {
-      expect(isValid('910401052331')).toBe(true);
-      expect(isValid('000401052331')).toBe(true);
+  describe('#isValidIc()', () => {
+    it('should return true for valid unformatIcted MyKad number', () => {
+      expect(isValidIc('910401052331')).toBe(true);
+      expect(isValidIc('000401052331')).toBe(true);
     });
 
-    it('should return true for valid formatted MyKad number', () => {
-      expect(isValid('910223-08-1274')).toBe(true);
-      expect(isValid('000223-08-1274')).toBe(true);
+    it('should return true for valid formatIcted MyKad number', () => {
+      expect(isValidIc('910223-08-1274')).toBe(true);
+      expect(isValidIc('000223-08-1274')).toBe(true);
     });
 
     it('should return false for invalid input', () => {
-      expect(isValid('loooool')).toBe(false);
+      expect(isValidIc('loooool')).toBe(false);
     });
 
     it('should return false for MyKad with too many numbers', () => {
-      expect(isValid('27812121293451')).toBe(false);
+      expect(isValidIc('27812121293451')).toBe(false);
     });
 
     it('should return false for MyKad with too little numbers', () => {
-      expect(isValid('8705')).toBe(false);
+      expect(isValidIc('8705')).toBe(false);
     });
 
     it('should return false for MyKad with invalid date of birth', () => {
-      expect(isValid('110234013324')).toBe(false);
-      expect(isValid('110200013324')).toBe(false);
+      expect(isValidIc('110234013324')).toBe(false);
+      expect(isValidIc('110200013324')).toBe(false);
     });
 
     it('should return false for MyKad with invalid month of birth', () => {
-      expect(isValid('541324013324')).toBe(false);
-      expect(isValid('540024013324')).toBe(false);
+      expect(isValidIc('541324013324')).toBe(false);
+      expect(isValidIc('540024013324')).toBe(false);
     });
 
     it('should return false for MyKad with invalid month and date of birth', () => {
-      expect(isValid('541352013324')).toBe(false);
-      expect(isValid('540000013324')).toBe(false);
+      expect(isValidIc('541352013324')).toBe(false);
+      expect(isValidIc('540000013324')).toBe(false);
     });
 
     it('should return false for MyKad with invalid place of births', () => {
@@ -140,15 +146,15 @@ describe('MalaysiaIC', () => {
       ];
 
       invalidBirthPlaceCodes.forEach(code => {
-        expect(isValid(`560714${code}3094`)).toBe(false);
+        expect(isValidIc(`560714${code}3094`)).toBe(false);
       });
     });
   });
 
-  describe('#parse()', () => {
+  describe('#parseIc()', () => {
     it('should return correct data object for valid MyKad numbers', () => {
       Object.keys(numDataPairs).find((key: string) => {
-        parse(key, (_, data) => {
+        parseIc(key, (_, data) => {
           expect(data).toEqual(numDataPairs[key]);
         });
       });
@@ -156,7 +162,7 @@ describe('MalaysiaIC', () => {
 
     it('should return correct data object for valid formatted MyKad number (async)', done => {
       const icNum = '460911-02-1389';
-      parse(icNum, (err, data) => {
+      parseIc(icNum, (err, data) => {
         expect(data).toEqual({
           birthDate: new Date(1946, 8, 11),
           birthPlace: { region: 'SOUTHEAST_ASIA', country: 'MY', state: 'KDH' },
@@ -168,8 +174,8 @@ describe('MalaysiaIC', () => {
 
     it('should return correct data object for valid formatted MyKad number (sync)', () => {
       const icNum = '460911-02-1389';
-      const parsedData = parse(icNum);
-      expect(parsedData).toEqual({
+      const parseIcdData = parseIc(icNum);
+      expect(parseIcdData).toEqual({
         birthDate: new Date(1946, 8, 11),
         birthPlace: { region: 'SOUTHEAST_ASIA', country: 'MY', state: 'KDH' },
         gender: 'male',
@@ -178,7 +184,7 @@ describe('MalaysiaIC', () => {
 
     it('should throw error for MyKad number with wrong format (async)', done => {
       const icNum = '1910401052331';
-      parse(icNum, (error, data) => {
+      parseIc(icNum, (error, data) => {
         expect(() => {
           throw error;
         }).toThrow('Invalid MyKad number format');
@@ -187,10 +193,10 @@ describe('MalaysiaIC', () => {
       });
     });
 
-    it('should throw error for MyKad number with wrong format (sync)', () => {
+    it('should throw error for MyKad number with wrong formatIc (sync)', () => {
       const icNum = '1910401052331';
       try {
-        parse(icNum);
+        parseIc(icNum);
       } catch (error) {
         expect(() => {
           throw error;
@@ -200,7 +206,7 @@ describe('MalaysiaIC', () => {
 
     it('should throw error for invalid input', done => {
       const icNum = 'lololz';
-      parse(icNum, (error, data) => {
+      parseIc(icNum, (error, data) => {
         expect(() => {
           throw error;
         }).toThrow('Invalid MyKad number format');
@@ -210,33 +216,33 @@ describe('MalaysiaIC', () => {
     });
   });
 
-  describe('#format()', () => {
-    it('should return formatted MyKad number (async)', done => {
-      format('670822073459', (err, formatted) => {
-        expect(formatted).toEqual('670822-07-3459');
+  describe('#formatIc()', () => {
+    it('should return formatIcted MyKad number (async)', done => {
+      formatIc('670822073459', (err, formatIcted) => {
+        expect(formatIcted).toEqual('670822-07-3459');
         expect(err).toBeNull();
         done();
       });
     });
 
-    it('should return formatted MyKad number (sync)', () => {
-      const formatted = format('670822073459');
-      expect(formatted).toEqual('670822-07-3459');
+    it('should return formatIcted MyKad number (sync)', () => {
+      const formatIcted = formatIc('670822073459');
+      expect(formatIcted).toEqual('670822-07-3459');
     });
 
     it('should throw error for invalid MyKad number (async)', done => {
-      format('67a642019435', (error, formatted) => {
+      formatIc('67a642019435', (error, formatIcted) => {
         expect(() => {
           throw error;
         }).toThrow('Invalid MyKad number format');
-        expect(formatted).toBeNull();
+        expect(formatIcted).toBeNull();
         done();
       });
     });
 
     it('should throw error for invalid MyKad number (sync)', () => {
       try {
-        format('67a642019435');
+        formatIc('67a642019435');
       } catch (error) {
         expect(() => {
           throw error;
@@ -245,45 +251,45 @@ describe('MalaysiaIC', () => {
     });
   });
 
-  describe('#unformat()', () => {
-    it('should return unformatted MyKad number (async)', done => {
-      unformat('450312-09-4387', (_, unformatted) => {
-        expect(unformatted).toEqual('450312094387');
+  describe('#unformatIc()', () => {
+    it('should return unformatIcted MyKad number (async)', done => {
+      unformatIc('450312-09-4387', (_, unformatIcted) => {
+        expect(unformatIcted).toEqual('450312094387');
         done();
       });
     });
 
-    it('should do nothing for already unformatted MyKad number (async)', done => {
-      unformat('450312094387', (err, unformatted) => {
-        expect(unformatted).toEqual('450312094387');
+    it('should do nothing for already unformatIcted MyKad number (async)', done => {
+      unformatIc('450312094387', (err, unformatIcted) => {
+        expect(unformatIcted).toEqual('450312094387');
         done();
       });
     });
 
-    it('should return unformatted MyKad number (sync)', () => {
-      const unformatted = unformat('450312-09-4387');
-      expect(unformatted).toEqual('450312094387');
+    it('should return unformatIcted MyKad number (sync)', () => {
+      const unformatIcted = unformatIc('450312-09-4387');
+      expect(unformatIcted).toEqual('450312094387');
     });
 
-    it('should do nothing for unformatted MyKad number (sync)', () => {
-      const unformatted = unformat('450312094387');
-      expect(unformatted).toEqual('450312094387');
+    it('should do nothing for unformatIcted MyKad number (sync)', () => {
+      const unformatIcted = unformatIc('450312094387');
+      expect(unformatIcted).toEqual('450312094387');
     });
 
     it('should throw error for invalid MyKad number (async)', done => {
-      unformat('95303132094287', (error, formatted) => {
+      unformatIc('95303132094287', (error, formatIcted) => {
         expect(() => {
           throw error;
         }).toThrow('Invalid MyKad number format');
-        expect(formatted).toBeNull();
+        expect(formatIcted).toBeNull();
         done();
       });
     });
 
     it('should throw error for invalid MyKad number (sync)', () => {
       try {
-        const unformatted = unformat('95303132094287');
-        expect(unformatted).toEqual('450312094387');
+        const unformatIcted = unformatIc('95303132094287');
+        expect(unformatIcted).toEqual('450312094387');
       } catch (error) {
         expect(() => {
           throw error;
@@ -292,12 +298,12 @@ describe('MalaysiaIC', () => {
     });
   });
 
-  describe('#generateRandom()', () => {
+  describe('#generateRandomIc()', () => {
     it('should return valid randomized MyKad number', () => {
-      const randomNo = generateRandom();
+      const randomNo = generateRandomIc();
 
       expect(randomNo).toHaveLength(12);
-      expect(isValid(randomNo)).toEqual(true);
+      expect(isValidIc(randomNo)).toEqual(true);
     });
   });
 });

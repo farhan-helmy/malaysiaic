@@ -1,9 +1,9 @@
-import { parse } from '../index';
+import { parseIc } from '../index';
 
 const icNum = '1910401052331';
 
 try {
-  parse(icNum);
+  parseIc(icNum);
 } catch (error) {
   console.log(error);
 }

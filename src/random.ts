@@ -48,6 +48,6 @@ function randomSpecialNumber() {
   return code;
 }
 
-export function generateRandom(): string {
+export function generateRandomIc(): string {
   return dateToCode(randomDate()) + randomBirthplace() + randomSpecialNumber();
 }

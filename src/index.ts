@@ -1,5 +1,5 @@
 import { isValidBirthplace, parseBirthplace } from './birthplace';
-import { generateRandom } from './random';
+import { generateRandomIc } from './random';
 
 // Check if date is before disregarding year.
 function dateIsBefore(before: Date, max: Date) {
@@ -42,7 +42,7 @@ function extractParts(icNum: string) {
   return parts;
 }
 
-function isValid(icNum: string): boolean {
+function isValidIc(icNum: string): boolean {
   let parts;
   let intParts;
 
@@ -57,7 +57,7 @@ function isValid(icNum: string): boolean {
   return !isNaN(birthDate as number) && isValidBirthplace(intParts[4]);
 }
 
-function parse(
+function parseIc(
   icNum: string,
   cb?: (error: Error | null, parsedData: any) => void
 ): any {
@@ -85,7 +85,7 @@ function parse(
   return parsedData;
 }
 
-function format(
+function formatIc(
   icNum: string,
   cb?: (error: Error | null, parsedData: any) => void
 ): string | void {
@@ -107,16 +107,16 @@ function format(
   return formatted;
 }
 
-function unformat(
+function unformatIc(
   icNum: string,
   cb?: (error: Error | null, parsedData: any) => void
 ): string | void {
   if (!cb) {
-    const formatted = format(icNum) as string;
+    const formatted = formatIc(icNum) as string;
     return formatted.replace(/-/g, '');
   }
 
-  format(icNum, (err, formatted: string) => {
+  formatIc(icNum, (err, formatted: string) => {
     if (err) {
       return cb(err, null);
     }
@@ -125,4 +125,4 @@ function unformat(
   });
 }
 
-export { isValid, parse, format, unformat, generateRandom };
+export { isValidIc, parseIc, formatIc, unformatIc, generateRandomIc };
